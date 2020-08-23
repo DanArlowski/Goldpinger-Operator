@@ -1,0 +1,14 @@
+apiVersion: goldpinger.bloomberg.com/v1alpha1
+kind: Goldpinger
+metadata:
+  name: goldpinger
+spec:
+  goldPingerConfig:
+    Image: "docker.io/bloomberg/goldpinger:v3.0.0"
+    hostPath: ""
+    tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+    annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port: '8080'

@@ -1,0 +1,24 @@
+# permissions for end users to edit goldpingers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: goldpinger-editor-role
+rules:
+- apiGroups:
+  - goldpinger.bloomberg.com
+  resources:
+  - goldpingers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - goldpinger.bloomberg.com
+  resources:
+  - goldpingers/status
+  verbs:
+  - get

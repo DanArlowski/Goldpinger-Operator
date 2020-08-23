@@ -1,0 +1,7 @@
+apiVersion: goldpinger.bloomberg.com/v1alpha1
+kind: Goldpinger
+metadata:
+  name: goldpinger-sample
+spec:
+  # Add fields here
+  foo: bar

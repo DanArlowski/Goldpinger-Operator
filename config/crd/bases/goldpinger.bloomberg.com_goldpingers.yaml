@@ -1,0 +1,189 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.3.0
+  creationTimestamp: null
+  name: goldpingers.goldpinger.bloomberg.com
+spec:
+  group: goldpinger.bloomberg.com
+  names:
+    kind: Goldpinger
+    listKind: GoldpingerList
+    plural: goldpingers
+    singular: goldpinger
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: Goldpinger is the Schema for the goldpingers API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: GoldpingerSpec defines the desired state of Goldpinger
+          properties:
+            goldPingerConfig:
+              description: GoldpingerConfig holds all the Goldpinger Available Configurations.
+              properties:
+                Env:
+                  description: GoldpingerEnv holds all the environment variables available
+                    for the goldpinger container.
+                  properties:
+                    Host:
+                      description: Host to listen to
+                      type: string
+                    HostName:
+                      description: Hostname to show
+                      type: string
+                    HostsToResolve:
+                      description: HostsToResolve is used to ping external Hosts
+                      type: string
+                    PodIP:
+                      description: podIP is used to select a randomized subset of
+                        nodes to ping.
+                      type: string
+                    Port:
+                      description: port for the app
+                      format: int32
+                      type: integer
+                  type: object
+                Image:
+                  description: the goldpinger Image
+                  type: string
+                annotations:
+                  additionalProperties:
+                    type: string
+                  description: Annotations passed by the CR
+                  type: object
+                hostPath:
+                  description: the path for the route
+                  type: string
+                nodePort:
+                  description: NodePort, only used when deployed on kubernetes
+                  format: int32
+                  type: integer
+                routeTLS:
+                  description: TLSConfig defines config used to secure a route and
+                    provide termination
+                  properties:
+                    caCertificate:
+                      description: caCertificate provides the cert authority certificate
+                        contents
+                      type: string
+                    certificate:
+                      description: certificate provides certificate contents
+                      type: string
+                    destinationCACertificate:
+                      description: destinationCACertificate provides the contents
+                        of the ca certificate of the final destination.  When using
+                        reencrypt termination this file should be provided in order
+                        to have routers use it for health checks on the secure connection.
+                        If this field is not specified, the router may provide its
+                        own destination CA and perform hostname validation using the
+                        short service name (service.namespace.svc), which allows infrastructure
+                        generated certificates to automatically verify.
+                      type: string
+                    insecureEdgeTerminationPolicy:
+                      description: "insecureEdgeTerminationPolicy indicates the desired
+                        behavior for insecure connections to a route. While each router
+                        may make its own decisions on which ports to expose, this
+                        is normally port 80. \n * Allow - traffic is sent to the server
+                        on the insecure port (default) * Disable - no traffic is allowed
+                        on the insecure port. * Redirect - clients are redirected
+                        to the secure port."
+                      type: string
+                    key:
+                      description: key provides key file contents
+                      type: string
+                    termination:
+                      description: termination indicates termination type.
+                      type: string
+                  required:
+                  - termination
+                  type: object
+                tolerations:
+                  description: Tolerations for the Daemonset
+                  items:
+                    description: The pod this Toleration is attached to tolerates
+                      any taint that matches the triple <key,value,effect> using the
+                      matching operator <operator>.
+                    properties:
+                      effect:
+                        description: Effect indicates the taint effect to match. Empty
+                          means match all taint effects. When specified, allowed values
+                          are NoSchedule, PreferNoSchedule and NoExecute.
+                        type: string
+                      key:
+                        description: Key is the taint key that the toleration applies
+                          to. Empty means match all taint keys. If the key is empty,
+                          operator must be Exists; this combination means to match
+                          all values and all keys.
+                        type: string
+                      operator:
+                        description: Operator represents a key's relationship to the
+                          value. Valid operators are Exists and Equal. Defaults to
+                          Equal. Exists is equivalent to wildcard for value, so that
+                          a pod can tolerate all taints of a particular category.
+                        type: string
+                      tolerationSeconds:
+                        description: TolerationSeconds represents the period of time
+                          the toleration (which must be of effect NoExecute, otherwise
+                          this field is ignored) tolerates the taint. By default,
+                          it is not set, which means tolerate the taint forever (do
+                          not evict). Zero and negative values will be treated as
+                          0 (evict immediately) by the system.
+                        format: int64
+                        type: integer
+                      value:
+                        description: Value is the taint value the toleration matches
+                          to. If the operator is Exists, the value should be empty,
+                          otherwise just a regular string.
+                        type: string
+                    type: object
+                  type: array
+              type: object
+          type: object
+        status:
+          description: GoldpingerStatus defines the observed state of Goldpinger
+          properties:
+            nodes:
+              description: Nodes are the names of the Daemonset pods
+              items:
+                type: string
+              type: array
+            routePath:
+              description: RoutePath is the path created by the route
+              type: string
+            serviceType:
+              description: ServiceType is the type of the service deployed
+              type: string
+          required:
+          - nodes
+          - serviceType
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
